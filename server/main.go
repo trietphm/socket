@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"syscall"
 )
 
@@ -28,9 +29,24 @@ func main() {
 		panic(err)
 	}
 
+	fmt.Println("accept")
 	// Accept connection
-	_, _, err = syscall.Accept(socketFd)
+	nfd, _, err := syscall.Accept(socketFd)
 	if err != nil {
+		panic(err)
+	}
+
+	// read data from client
+	p := make([]byte, 100)
+	_, err = syscall.Read(nfd, p)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(p))
+
+	// Close socket
+	if err := syscall.Close(socketFd); err != nil {
 		panic(err)
 	}
 }

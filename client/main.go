@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"syscall"
 )
 
@@ -16,6 +17,17 @@ func main() {
 		Addr: [4]byte{127, 0, 0, 1},
 	}
 	if err := syscall.Connect(fd, &sockAddress); err != nil {
+		panic(err)
+	}
+
+	n, err := syscall.Write(fd, []byte("Hello world"))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(n)
+
+	// Close socket
+	if err := syscall.Close(fd); err != nil {
 		panic(err)
 	}
 }
